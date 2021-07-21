@@ -1,0 +1,12 @@
+*.ark
+*.scp
+fbank/
+data2/
+manifest/
+data/
+*.pyc
+*.pt
+events*
+exp/
+*.npy
+egs/speech_commands/data_useless/

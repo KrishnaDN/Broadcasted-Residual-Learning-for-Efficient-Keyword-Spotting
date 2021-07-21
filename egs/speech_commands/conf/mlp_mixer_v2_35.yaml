@@ -1,0 +1,64 @@
+data:
+  name: v2_35
+  labels: ['backward','bed','bird','cat', 'dog','down','eight','five','follow','forward','four','go',
+              'happy','house','learn','left','marvin','nine','no','off','on','one','right','seven','sheila','six','stop',
+                  'three','tree','two','up','visual','wow','yes','zero']
+  train: './egs/speech_commands/fbank/train_sp/feats.scp' 
+  valid: './egs/speech_commands/fbank/valid/feats.scp'
+  test: './egs/speech_commands/fbank/test/feats.scp'
+  cmvn_file: './egs/speech_commands/fbank/train_sp/global_cmvn'
+  
+  
+dataset_conf:
+  feat_dim: 40
+  spec_augment: True
+  spec_substitute: True
+  max_frames: 98
+
+model:
+  model_type: mlp_mixer
+  model_params:
+    input_size: [98,40]
+    patch_size: [2,40]
+    channels: 1
+    num_classes: 35
+    dim: 64
+    depth: 12
+    dim_head: 64
+    heads: 4
+    mlp_dim: 256
+    dropout: 0.1
+    emb_dropout: 0.1    
+    pool: 'cls'
+    label_smoothing: 0.1
+
+train:
+  optimizer_type: adam
+  optimizer:
+    lr: 0.001
+    betas: [0.9, 0.98]
+    eps: 1.0e-9
+    weight_decay: 1.0e-6
+    amsgrad: False
+  scheduler_type: transformer
+  scheduler:
+    model_size: 64
+    warmup_steps: 5000
+    factor: 1.0
+
+  clip_grad: 5
+  epochs: 80
+  accum_steps: 4
+  grad_noise: 0.0
+  load_model: False
+  batch_size: 200
+  model_dir: mlp_mixer_v2_35
+  exp_dir: './egs/speech_commands/exp'
+
+eval:
+  average_model:
+    dst_model: 'average_final.pt'
+    num: 5
+    val_best: True
+    min_epoch: 5
+    max_epoch: 10000
